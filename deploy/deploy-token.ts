@@ -24,7 +24,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
   // Initialize the wallet.
   const wallet = new Wallet(PRIVATE_KEY);
-  const admin = "0x7beDA3197383B1AE4a36c0791bBaD34273975051"
+  const admin = "0x7beDA3197383B1AE4a36c0791bBaD34273975051";
 
   // Create deployer object and load the artifact of the contract you want to deploy.
   const deployer = new Deployer(hre, wallet);
@@ -42,7 +42,9 @@ export default async function (hre: HardhatRuntimeEnvironment) {
   const greeterContract = await deployer.deploy(artifact, [admin]);
 
   //obtain the Constructor Arguments
-  console.log("Constructor args:" + greeterContract.interface.encodeDeploy([admin]));
+  console.log(
+    "Constructor args:" + greeterContract.interface.encodeDeploy([admin])
+  );
 
   // Show the contract info.
   const contractAddress = greeterContract.address;
@@ -51,16 +53,13 @@ export default async function (hre: HardhatRuntimeEnvironment) {
   // // Save the deployed contract address to vars.json
   const config = JSON.parse(fs.readFileSync(CONFIG_PATH, "utf-8"));
 
-  // const contractAddress = "0x88d75394b93D84C1448e69f9Dc2cE139C4722db6"
-
-  
   if (!config[NETWORK]) {
     config[NETWORK] = { deployed: [admin] };
   }
 
   config[NETWORK].deployed.push({
     name: CONTRACT_NAME,
-    address: contractAddress
+    address: contractAddress,
   });
 
   fs.writeFileSync(CONFIG_PATH, JSON.stringify(config, null, 2));
@@ -70,11 +69,7 @@ export default async function (hre: HardhatRuntimeEnvironment) {
     // Contract MUST be fully qualified name (e.g. path/sourceName:contractName)
     const contractFullyQualifedName = `contracts/${CONTRACT_NAME}.sol:${CONTRACT_NAME}`;
 
-    console.log("Contract Fully Qualifed Name", contractFullyQualifedName)
-    const deployerOptions = {
-      optimization: 0, // Set optimization level to 0 (none)
-    };
-
+    console.log("Contract Fully Qualifed Name", contractFullyQualifedName);
     // Verify contract programmatically
     await hre.run("verify:verify", {
       address: contractAddress,
